@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Data Share</string>
+    <string name="location_access_error">Location serveices must be enabled to access bluetooth</string>
+</resources>

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    env_file: .env
+  web:
+    build:
+      context: ./data-share-backend
+      dockerfile: /Dockerfile
+    command: bash -c "rails db:create; rails db:migrate; rails s -p 80 -b 'web'"
+    volumes:
+      - ./data-share-backend:/web
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    env_file: .env
