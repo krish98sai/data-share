@@ -16,6 +16,7 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_btserver)
         btServer = BTServer(this, mBTAdapter!!, this)
     }
 
@@ -53,7 +54,7 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
     }
 
     override fun onBluetoothDiscover(device: BluetoothDevice) {
-        
+
     }
 
     override fun onDestroy() {
