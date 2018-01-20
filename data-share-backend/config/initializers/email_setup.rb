@@ -4,7 +4,7 @@ if Rails.env.development?
   ActionMailer::Base.smtp_settings = {
     address:              'smtp.gmail.com',
     port:                 587,
-    domain:               'get-data-share.com',
+    domain:               '192.168.99.100',
     user_name:            ENV["GMAIL_USERNAME"],
     password:             ENV["GMAIL_PASSWORD"],
     authentication:       'plain',
