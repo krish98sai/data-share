@@ -25,8 +25,10 @@ class BTClient : Closeable {
     var connectingThread: Thread? = null
     var receivingThread: Thread? = null
 
-    constructor(activity: Activity) {
+    constructor(activity: Activity, myListener: BTClientCallBacks) {
         this.callingActivity = activity
+        this.listener = myListener
+
     }
 
     /**
