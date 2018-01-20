@@ -1,9 +1,11 @@
 package com.soylentispeople.datashare.datashare
 
 import android.app.Activity
-import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.util.Log
+import android.widget.Toast
 import java.io.Closeable
 import java.io.IOException
 import java.nio.charset.Charset
@@ -12,63 +14,101 @@ import java.util.*
 /**
  * Created by Yuval Shabtai on 1/20/2018.
  */
-class BTClient : Closeable {
+class BTServer: Closeable {
 
-    var mActivity: Activity? = null
+    var mActivity: Activity
+    var mBTAdapter: BluetoothAdapter
+    var listener: BTServerCallbacks
 
-    var listener: BTClientCallbacks? = null
-
-    /**
-     * Socket is always null when not connected
-     */
-    var socket: BluetoothSocket? = null
     var connectingThread: Thread? = null
     var receivingThread: Thread? = null
 
-    constructor(activity: Activity, myListener: BTClientCallbacks) {
+    var serverSocket: BluetoothServerSocket? = null
+    var socket: BluetoothSocket? = null
+
+    constructor(activity: Activity, btAdapter: BluetoothAdapter, listener: BTServerCallbacks) {
         this.mActivity = activity
-        this.listener = myListener
+        this.mBTAdapter = btAdapter
+        this.listener = listener
     }
 
-    /**
-     * Sends a connection request to the given device with the given
-     * UUID
-     */
-    fun connect(device: BluetoothDevice, uuid: UUID) {
-        //If already in process of connecting, cancel
-        if(connectingThread != null && connectingThread!!.isAlive) {
-            connectingThread!!.interrupt()
+    fun acceptConnection(uuid: UUID) {
+        //If already connected, do nothing
+        if(socket != null) {
+            return
         }
 
-        //Socket is never null while connected
-        if(socket != null) {
-            socket!!.close()
-            socket = null
+        //Check for bluetooth availability
+        if(!mBTAdapter.isEnabled) {
+            Toast.makeText(mActivity, "Please enable bluetooth on your device", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        //Already waiting for connection, do nothing
+        if(connectingThread != null && connectingThread!!.isAlive) {
+            return
         }
 
         connectingThread = Thread({
             try {
-                socket = device.createRfcommSocketToServiceRecord(uuid)
-                socket!!.connect()
-                //Connection successful, dispatch onConnected from listener
-                mActivity!!.runOnUiThread({listener!!.onConnected()})
+                serverSocket = mBTAdapter.listenUsingInsecureRfcommWithServiceRecord("Data-Share", uuid)
+                socket = serverSocket!!.accept()
 
-                //Start receiving messages
+                mActivity.runOnUiThread({ listener.onConnected() })
+
+                serverSocket!!.close()
+                serverSocket = null
+
                 receivingThread = Thread({
                     readMessages()
                 })
                 receivingThread!!.start()
             } catch(e: IOException) {
-                //If any part of the connection process fails, dispatch onConnectionFail
-                mActivity!!.runOnUiThread({listener!!.onConnectionFail()})
+                if(serverSocket != null) {
+                    serverSocket!!.close()
+                    serverSocket = null
+                }
+
+                mActivity.runOnUiThread({ listener.onConnectionFail() })
             } catch(e1: InterruptedException) {
-                //If interrupted, simply return
+                if(serverSocket != null) {
+                    serverSocket!!.close()
+                    serverSocket = null
+                }
+
                 Log.w("Bluetooth Connection", "Warning: bluetooth connection interrupted")
             }
         })
 
-        //Start thread
         connectingThread!!.start()
+    }
+
+    fun cancelAcceptance() {
+        if(serverSocket != null) {
+            serverSocket!!.close()
+            serverSocket = null
+        }
+    }
+
+    override fun close() {
+        if(connectingThread != null && connectingThread!!.isAlive) {
+            connectingThread!!.interrupt()
+            connectingThread = null
+        }
+
+        if(receivingThread != null && receivingThread!!.isAlive) {
+            receivingThread!!.interrupt()
+        }
+
+        if(serverSocket != null) {
+            serverSocket!!.close()
+            serverSocket = null
+        }
+
+        if(socket != null) {
+            socket!!.close()
+            socket = null
+        }
     }
 
     fun disconnect() {
@@ -90,22 +130,16 @@ class BTClient : Closeable {
                 if(socket != null) {
                     socket!!.close()
                     socket = null
-                    mActivity!!.runOnUiThread({listener!!.onDisconnect()})
+                    mActivity.runOnUiThread({listener.onDisconnect()})
                 }
             } catch(e1: Exception) {
                 if(socket != null) {
                     socket!!.close()
                     socket = null
-                    mActivity!!.runOnUiThread({listener!!.onDisconnect()})
+                    mActivity.runOnUiThread({listener.onDisconnect()})
                 }
             }
         }).start()
-    }
-
-    override fun close() {
-        if(connectingThread != null && connectingThread!!.isAlive) {
-            connectingThread!!.interrupt()
-        }
     }
 
     private fun readMessages() {
@@ -115,12 +149,12 @@ class BTClient : Closeable {
 
             var input: Int = 0
             /*
-         * Forever:
-         *  Read a character
-         *  If -1, stream is terminated, terminate general communication
-         *  If 0, message is fully received, dispatch onMessageReceived
-         *  Anything else is just another message character
-         */
+             * Forever:
+             * Read a character
+             * If -1, stream is terminated, terminate general communication
+             * If 0, message is fully received, dispatch onMessageReceived
+             * Anything else is just another message character
+             */
             while (true) {
                 input = inS.read()
                 if (input == -1) {
