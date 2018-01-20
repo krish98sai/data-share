@@ -25,7 +25,7 @@ class SignupActivity: Activity(){
         findViewById<Button>(R.id.register).setOnClickListener { //TODO HTTP requests
             if((findViewById(R.id.password)as EditText).text.toString().equals((findViewById(R.id.password2)as EditText).text.toString())){
                 if((findViewById(R.id.password)as EditText).text.toString().length > 7){
-                    
+                    URLLookUp().execute("http://get-data-share.com/auth")
                 }
             }
 
@@ -35,14 +35,13 @@ class SignupActivity: Activity(){
 
     var client = OkHttpClient()
 
-    fun run(url: String): Response {
+    fun run(url: String): JSONObject {
         lateinit var request: Request
 
             val requestBody = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("email", (findViewById(R.id.email) as EditText).text.toString())
                     .addFormDataPart("password", (findViewById(R.id.password) as EditText).text.toString())
-                    .addFormDataPart("phone", (findViewById(R.id.phoneNumber) as EditText).text.toString())
                     .build()
 
             request = Request.Builder()
@@ -51,21 +50,22 @@ class SignupActivity: Activity(){
                     .build()
 
         val response = client.newCall(request).execute()
-        return response
+        var obj = JSONObject(response.body()!!.string())
+
+        return obj
     }
 
-    private inner class URLLookUp : AsyncTask<String, Void, Response>() {
-        override fun doInBackground(vararg str: String): Response? {
+    private inner class URLLookUp : AsyncTask<String, Void, JSONObject>() {
+        override fun doInBackground(vararg str: String): JSONObject? {
             return run(str[0]);
         }
 
-        override fun onPostExecute(result: Response?) {
-            var obj = JSONObject(result!!.body()!!.string())
-            if( obj.has("errors") ){
+        override fun onPostExecute(result: JSONObject?) {
+
+            if( result!!.has("errors") ){
 
             }else{
-                var intent = Intent(this@SignupActivity, MenuActivity::class.java)
-                startActivity(intent)
+                setContentView(R.layout.signup_confirm_page);
             }
         }
     }

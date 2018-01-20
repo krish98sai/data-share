@@ -22,14 +22,14 @@ class LoginActivity : Activity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        findViewById<Button>(R.id.register).setOnClickListener { //TODO HTTP requests
-            var intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
 
-        }
         if(PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")){
             setContentView(R.layout.login_page);
+            findViewById<Button>(R.id.register).setOnClickListener { //TODO HTTP requests
+                var intent = Intent(this, SignupActivity::class.java)
+                startActivity(intent)
 
+            }
 
             findViewById<Button>(R.id.login).setOnClickListener {
                 URLLookUp().execute("http://get-data-share.com/auth/sign_in")
@@ -49,7 +49,7 @@ class LoginActivity : Activity(){
 
     var client = OkHttpClient()
 
-    fun run(url: String): Response {
+    fun run(url: String): JSONObject {
         lateinit var request: Request
         if(!PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")) {
             val requestBody = MultipartBody.Builder()
@@ -75,34 +75,39 @@ class LoginActivity : Activity(){
                     .build()
         }
         val response = client.newCall(request).execute()
-        return response
+        var obj = JSONObject(response.body()!!.string())
+
+        if(!PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")) {
+
+            if(obj!!.get("status").toString().equals("success")){
+                var intent = Intent(this, MenuActivity::class.java)
+                startActivity(intent)
+            }
+        }else{
+
+            if( obj!!.has("errors") && (obj.get("errors") as JSONArray).get(0).equals("Invalid login credentials. Please try again.")){
+                Log.e("what is happening?", "THis is happpeing")
+            }else{
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("AuthenticationToken", response.header("access-token").toString()).apply();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("uid", response.header("uid").toString()).apply();
+                var intent = Intent(this, MenuActivity::class.java)
+                startActivity(intent)
+            }
+
+        }
+
+
+        return obj
     }
 
-    private inner class URLLookUp : AsyncTask<String, Void, Response>() {
-        override fun doInBackground(vararg str: String): Response? {
+    private inner class URLLookUp : AsyncTask<String, Void, JSONObject>() {
+        override fun doInBackground(vararg str: String): JSONObject? {
             return run(str[0]);
         }
 
-        override fun onPostExecute(result: Response?) {
-            Log.e("something1",result!!.body().toString())
-            if(!PreferenceManager.getDefaultSharedPreferences(this@LoginActivity).getString("AuthenticationToken", "").equals("")) {
-                var obj = JSONObject(result.body()!!.string())
-                if(obj.get("status").toString().equals("success")){
-                    var intent = Intent(this@LoginActivity, MenuActivity::class.java)
-                    startActivity(intent)
-                }
-            }else{
-                var obj = JSONObject(result.body()!!.string())
-                if( obj.has("errors") && (obj.get("errors") as JSONArray).get(0).equals("Invalid login credentials. Please try again.")){
+        override fun onPostExecute(result: JSONObject?) {
 
-                }else{
-                    PreferenceManager.getDefaultSharedPreferences(this@LoginActivity).edit().putString("AuthenticationToken", result.header("access-token").toString()).apply();
-                    PreferenceManager.getDefaultSharedPreferences(this@LoginActivity).edit().putString("uid", result.header("uid").toString()).apply();
-                    var intent = Intent(this@LoginActivity, MenuActivity::class.java)
-                    startActivity(intent)
-                }
 
-            }
         }
     }
 
