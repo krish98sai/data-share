@@ -1,4 +1,4 @@
-package com.ys.bluetooth;
+package com.ys.bluetooth
 
 import android.bluetooth.BluetoothDevice;
 
@@ -16,13 +16,13 @@ class MainActivity : BTActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        scan();
+        scan()
     }
 
     override fun onBluetoothDiscover(device: BluetoothDevice) {
-        val textView = TextView(this);
-        textView.setText(device.name);
-        findViewById<LinearLayout>(R.id.list).addView(textView);
-        Log.e("Bluetooth device: ", device.toString());
+        val textView = TextView(this)
+        textView.text = device.name
+        findViewById<LinearLayout>(R.id.list).addView(textView)
+        Log.e("Bluetooth device: ", device.toString())
     }
 }

@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\krish98sai\Developer\Hackathon\data-share\data-share-frontend\app\app.iml" filepath="C:\Users\krish98sai\Developer\Hackathon\data-share\data-share-frontend\app\app.iml" />
       <module fileurl="file://C:\Users\adity\OneDrive\Desktop\Dev Stuff\data-share\data-share-frontend\app\app.iml" filepath="C:\Users\adity\OneDrive\Desktop\Dev Stuff\data-share\data-share-frontend\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/data-share-frontend.iml" filepath="$PROJECT_DIR$/data-share-frontend.iml" />
       <module fileurl="file://C:\Users\adity\OneDrive\Desktop\Dev Stuff\data-share\data-share-frontend\data-share-frontend.iml" filepath="C:\Users\adity\OneDrive\Desktop\Dev Stuff\data-share\data-share-frontend\data-share-frontend.iml" />
+      <module fileurl="file://C:\Users\krish98sai\Developer\Hackathon\data-share\data-share-frontend\data-share-frontend.iml" filepath="C:\Users\krish98sai\Developer\Hackathon\data-share\data-share-frontend\data-share-frontend.iml" />
     </modules>
   </component>
 </project>

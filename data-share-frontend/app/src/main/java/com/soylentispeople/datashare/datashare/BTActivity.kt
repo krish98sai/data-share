@@ -36,13 +36,13 @@ abstract class BTActivity : AppCompatActivity() {
     protected var mBTAdapter : BluetoothAdapter? = null
     protected val mBroadcastReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action.equals(BluetoothDevice.ACTION_FOUND)) {
+            if (intent.action == BluetoothDevice.ACTION_FOUND) {
                 //Call onBluetoothDiscover once a bluetooth device has been discovered
                 onBluetoothDiscover(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE))
-            } else if(intent.action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+            } else if(intent.action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED) {
                 //Unregister receiver when discovery is finished
                 unregisterBTReceiver()
-            } else if(intent.action.equals(BluetoothAdapter.ACTION_DISCOVERY_STARTED)) {
+            } else if(intent.action == BluetoothAdapter.ACTION_DISCOVERY_STARTED) {
                 Log.e("Bluetooth", "Discovery started")
             }
         }
@@ -65,7 +65,7 @@ abstract class BTActivity : AppCompatActivity() {
         //Check if device supports bluetooth
         if(mBTAdapter == null) {
             Toast.makeText(this, "Device does not support bluetooth", Toast.LENGTH_SHORT).show()
-            return false;
+            return false
         }
 
         //Request location permission (required for bluetooth access)
@@ -80,7 +80,7 @@ abstract class BTActivity : AppCompatActivity() {
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, getString(R.string.location_access_error), Toast.LENGTH_SHORT).show()
-                    return false;
+                    return false
                 }
             }
         }
@@ -91,13 +91,13 @@ abstract class BTActivity : AppCompatActivity() {
             startActivityForResult(enableBTIntent, REQUEST_ENABLE_BT)
 
             if(!mBTAdapter!!.isEnabled) {
-                Toast.makeText(this, "Bluetooth must be enabled to access the app's services", Toast.LENGTH_SHORT)
-                return false;
+                Toast.makeText(this, "Bluetooth must be enabled to access the app's services", Toast.LENGTH_SHORT).show()
+                return false
             }
         }
 
         //Setup successful
-        return true;
+        return true
     }
 
     /**
@@ -106,15 +106,15 @@ abstract class BTActivity : AppCompatActivity() {
      *
      * @param device The device that was discovered.
      */
-    protected abstract fun onBluetoothDiscover(device: BluetoothDevice);
+    protected abstract fun onBluetoothDiscover(device: BluetoothDevice)
 
     /**
      * Scans for nearby bluetooth devices. Calls onBluetoothDiscover
      * for every discovered device.
      */
     protected fun scan() {
-        if(setupStatus == false) {
-            Toast.makeText(this, "Cannot scan. Bluetooth is not set up", Toast.LENGTH_SHORT)
+        if(!setupStatus) {
+            Toast.makeText(this, "Cannot scan. Bluetooth is not set up", Toast.LENGTH_SHORT).show()
             return
         }
 
