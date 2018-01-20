@@ -43,7 +43,7 @@ abstract class BTActivity : AppCompatActivity() {
                 //Unregister receiver when discovery is finished
                 unregisterBTReceiver()
             } else if(intent.action == BluetoothAdapter.ACTION_DISCOVERY_STARTED) {
-                Log.e("Bluetooth", "Discovery started")
+                Log.i("BTActivity", "Discovery started")
             }
         }
     }
@@ -133,7 +133,11 @@ abstract class BTActivity : AppCompatActivity() {
      * Unregisters the bluetooth receiver of this class.
      */
     private fun unregisterBTReceiver() {
-        unregisterReceiver(mBroadcastReceiver)
+        try {
+            unregisterReceiver(mBroadcastReceiver)
+        } catch(e: IllegalArgumentException) {
+            Log.w("BTActivity", "Broadcast receiver unregistered, even though it wasn't registered to begin with")
+        }
     }
 
     override fun onDestroy() {
