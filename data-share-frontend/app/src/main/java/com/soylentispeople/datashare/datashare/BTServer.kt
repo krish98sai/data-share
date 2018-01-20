@@ -170,12 +170,13 @@ class BTServer: Closeable {
                     //Stream terminated, initiate connecting severing protocol
                     break
                 } else if (input == 0) {
+                    val message = messageBuilder.toString()
                     //dispatch message received and reset builder
-                    mActivity!!.runOnUiThread({ listener!!.onMessageReceived(messageBuilder.toString()) })
+                    mActivity!!.runOnUiThread({ listener!!.onMessageReceived(message) })
                     messageBuilder = StringBuilder(256)
                 } else {
                     //Append message to messageBuilder
-                    messageBuilder.append(input as Char)
+                    messageBuilder.append(input.toChar())
                 }
             }
 
