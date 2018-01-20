@@ -69,4 +69,9 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
 
         findViewById<LinearLayout>(R.id.device_list).addView(deviceView)
     }
+
+    override fun onDestroy() {
+        btClient!!.close()
+        super.onDestroy()
+    }
 }
