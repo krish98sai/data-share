@@ -28,6 +28,14 @@
                 android:text="Disconnect"
                 android:layout_gravity="center_vertical"
                 android:onClick="disconnect"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scan"
+                android:layout_gravity="center_vertical"
+                android:onClick="scan"/>
+
         </LinearLayout>
 
         <ScrollView

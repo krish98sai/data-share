@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -62,7 +63,15 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
 
         deviceMap!!.put(deviceView, device)
 
+
         deviceView.setOnClickListener({
+            var layout = findViewById<LinearLayout>(R.id.device_list)
+            val childCount = layout.childCount
+
+            for(i in 0..childCount-1){
+                layout.getChildAt(i).setBackgroundColor(0xFFFFFFFF.toInt())
+            }
+
             selectedDevice = deviceMap!!.get(it as TextView)
             it.setBackgroundColor(0xFFCDCDCD.toInt())
         })
@@ -73,5 +82,16 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
     override fun onDestroy() {
         btClient!!.close()
         super.onDestroy()
+    }
+
+    fun scan(view: View){
+        findViewById<LinearLayout>(R.id.device_list).removeAllViews()
+        deviceMap!!.clear()
+        super.scan()
+    }
+
+    fun sendMessage(view: View) {
+        val textBox = findViewById<EditText>(R.id.message_text)
+        btClient!!.sendMessage(textBox.text.toString())
     }
 }

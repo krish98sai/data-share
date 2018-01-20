@@ -11,6 +11,7 @@ import java.util.*
 
 /**
  * Created by Yuval Shabtai on 1/20/2018.
+ * Raeeka Yusuf on 1/20/2018
  */
 class BTClient : Closeable {
 
@@ -85,7 +86,15 @@ class BTClient : Closeable {
 
         Thread({
             try {
-                socket!!.outputStream.write(message.toByteArray(Charset.forName("US-ASCII")))
+                //creates a  byte array with an extra 0 at the end as a flag for when the message ends
+                var tempArr = message.toByteArray(Charset.forName("US-ASCII"))
+                var arr2 = ByteArray(tempArr.size + 1, {i -> 0})
+                for(i in 0..tempArr.size-1){
+                    arr2[i] = tempArr[i]
+                }
+                socket!!.outputStream.write(arr2)
+
+
             } catch(e: IOException) {
                 if(socket != null) {
                     socket!!.close()
