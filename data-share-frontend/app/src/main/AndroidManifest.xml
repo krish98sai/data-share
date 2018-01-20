@@ -19,6 +19,7 @@
         </activity>
 
         <activity android:name=".BTClientActivity"></activity>
+        <activity android:name=".BTServerActivity"/>
 
     </application>
 
