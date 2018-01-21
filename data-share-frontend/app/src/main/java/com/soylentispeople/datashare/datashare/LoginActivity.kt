@@ -25,7 +25,7 @@ class LoginActivity : Activity(){
 
         if(PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")){
             setContentView(R.layout.login_page);
-            (findViewById(R.id.register) as Button).setOnClickListener { //TODO HTTP requests
+            (findViewById<Button>(R.id.register) as Button).setOnClickListener { //TODO HTTP requests
                 var intent = Intent(this, SignupActivity::class.java)
                 startActivity(intent)
 
@@ -60,8 +60,8 @@ class LoginActivity : Activity(){
         }else{
             val requestBody = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("email", (findViewById(R.id.email) as EditText).text.toString())
-                    .addFormDataPart("password", (findViewById(R.id.password) as EditText).text.toString())
+                    .addFormDataPart("email", (findViewById<EditText>(R.id.email) as EditText).text.toString())
+                    .addFormDataPart("password", (findViewById<EditText>(R.id.password) as EditText).text.toString())
                     .build()
 
             request = Request.Builder()
