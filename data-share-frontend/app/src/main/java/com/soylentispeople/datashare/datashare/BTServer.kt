@@ -2,6 +2,7 @@ package com.soylentispeople.datashare.datashare
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.util.Log
@@ -23,6 +24,8 @@ class BTServer: Closeable {
     var connectingThread: Thread? = null
     var receivingThread: Thread? = null
 
+    var isConnected: Boolean = false
+    var connectedDevice: BluetoothDevice? = null
     var serverSocket: BluetoothServerSocket? = null
     var socket: BluetoothSocket? = null
 
@@ -54,6 +57,7 @@ class BTServer: Closeable {
                 serverSocket = mBTAdapter.listenUsingInsecureRfcommWithServiceRecord("Data-Share", uuid)
                 socket = serverSocket!!.accept()
 
+                isConnected = true
                 mActivity.runOnUiThread({ listener.onConnected() })
 
                 serverSocket!!.close()
@@ -112,10 +116,7 @@ class BTServer: Closeable {
     }
 
     fun disconnect() {
-        if(socket != null) {
-            socket!!.close()
-            socket = null
-        }
+        closeConnectionSequence()
     }
 
     fun sendMessage(message: String) {
@@ -136,17 +137,9 @@ class BTServer: Closeable {
 
                 //socket!!.outputStream.write(message.toByteArray(Charset.forName("US-ASCII")))
             } catch(e: IOException) {
-                if(socket != null) {
-                    socket!!.close()
-                    socket = null
-                    mActivity.runOnUiThread({listener.onDisconnect()})
-                }
+                closeConnectionSequence()
             } catch(e1: Exception) {
-                if(socket != null) {
-                    socket!!.close()
-                    socket = null
-                    mActivity.runOnUiThread({listener.onDisconnect()})
-                }
+                closeConnectionSequence()
             }
         }).start()
     }
@@ -172,7 +165,7 @@ class BTServer: Closeable {
                 } else if (input == 0) {
                     val message = messageBuilder.toString()
                     //dispatch message received and reset builder
-                    mActivity!!.runOnUiThread({ listener!!.onMessageReceived(message) })
+                    mActivity.runOnUiThread({ listener.onMessageReceived(message) })
                     messageBuilder = StringBuilder(256)
                 } else {
                     //Append message to messageBuilder
@@ -181,21 +174,22 @@ class BTServer: Closeable {
             }
 
             //Loop terminated, connection severing initiated
-            if (socket != null) {
-                socket!!.close()
-                socket = null
-            }
-            mActivity!!.runOnUiThread({ listener!!.onDisconnect() })
+            closeConnectionSequence()
+            mActivity.runOnUiThread({ listener.onDisconnect() })
         } catch(e: InterruptedException) {
-            if (socket != null) {
-                socket!!.close()
-                socket = null
-            }
+            closeConnectionSequence()
         } catch(e1: IOException) {
-            if (socket != null) {
-                socket!!.close()
-                socket = null
-            }
+            closeConnectionSequence()
+        }
+    }
+
+    private fun closeConnectionSequence() {
+        if (socket != null) {
+            socket!!.close()
+            socket = null
+            connectedDevice = null
+            mActivity.runOnUiThread({ listener.onDisconnect() })
+            isConnected = false
         }
     }
 }
