@@ -30,6 +30,8 @@
         <activity android:name=".SignupActivity"/>
         <activity android:name=".MenuActivity"/>
         <activity android:name=".ProviderSettings"/>
+        <activity android:name=".BTServerProvideActivity"/>
+        <activity android:name=".BTClientReceiveActivity"/>
     </application>
 
 </manifest>
