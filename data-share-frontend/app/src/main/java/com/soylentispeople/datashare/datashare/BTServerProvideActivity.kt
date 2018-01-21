@@ -68,6 +68,7 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
 
     override fun onConnected() {
         Log.i("BTServer", "Successful connection established")
+        used_bytes = 200000000
     }
 
     override fun onConnectionFail() {
