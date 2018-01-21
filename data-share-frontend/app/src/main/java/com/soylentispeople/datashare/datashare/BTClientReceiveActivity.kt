@@ -3,6 +3,7 @@ package com.soylentispeople.datashare.datashare
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.TextView
 import java.util.*
@@ -39,7 +40,7 @@ class BTClientReceiveActivity : BTActivity(), BTClientCallbacks {
     }
 
     override fun onMessageReceived(message: String) {
-        //TODO: Protocol goes here
+        (findViewById<WebView>(R.id.webview) as WebView).loadData(message, "text/html", null)
     }
 
     fun scan(view: View) {

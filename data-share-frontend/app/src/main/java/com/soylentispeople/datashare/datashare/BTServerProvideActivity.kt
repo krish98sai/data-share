@@ -20,8 +20,6 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.util.*
 import org.json.JSONException
-import java.net.URL
-
 
 class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
 
@@ -83,6 +81,7 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
 
     override fun onMessageReceived(message: String) {
         val json = JSONObject(message)
+        Log.d("***************", message)
         if(json.has("url")){
             val url = json.get("url").toString()
             URLLookUp().execute(url)
@@ -92,20 +91,9 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("receiver-uid", uid).apply()
             URLLookUp().execute("http://get-data-share.com/payments/get_usable_bytes?uid=" + uid)
         }
-
-        Log.i("BTServer", "Message received. Contents: " + message)
-        if(message.length > 10 && message.substring(0,10).equals("ClientID: ")){
-            var user_id = message.substring(10)
-            URLLookUp().execute("http://get-data-share.com/payments/get_usable_bytes?uid="+ user_id)
-            //TODO send server the client id here. Ask sai for what exactly to send.
-        }else if(message.length > 9 && message.substring(0,9).equals("BDevice: ")){
-            var BDevice = message.substring(9)
-            Toast.makeText(this, BDevice, Toast.LENGTH_LONG).show()
-        }
     }
 
     override fun onBluetoothDiscover(device: BluetoothDevice) {
-
     }
 
     override fun onDestroy() {
@@ -116,7 +104,9 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
     var client = OkHttpClient()
 
     fun run(url: String): Response {
-        if (url.substring(0..51) == "http://get-data-share.com/payments/get_usable_bytes"){
+        lateinit var response : Response
+        lateinit var str_response : String
+        if (url.substring(0, 51) == "http://get-data-share.com/payments/get_usable_bytes"){
             val request: Request = Request.Builder()
                     .header("access-token", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
                     .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
@@ -124,13 +114,14 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
                     .url(url)
                     .build()
 
-            val response = client.newCall(request).execute()
-            val str = response.body()!!.string()
+            response = client.newCall(request).execute()
+            str_response = response.body()!!.string()
 
-            val obj = JSONObject(str)
+            Log.d("***************", str_response)
+            val obj = JSONObject(str_response)
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("receiver_bytes", obj!!.get("bytes").toString()).apply()
 
-            return response
+            //return response
         }
         else if (url == "http://get-data-share.com/payments/execute_transaction"){
             val requestBody = MultipartBody.Builder()
@@ -147,15 +138,28 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
                     .post(requestBody)
                     .build()
 
-            return client.newCall(request).execute()
+            //return client.newCall(request).execute()
+            response = client.newCall(request).execute()
+            str_response = response.body()!!.string()
         }
         else{
             val request: Request = Request.Builder()
                     .url(url)
                     .build()
 
-            return client.newCall(request).execute()
+            //return client.newCall(request).execute()
+            response = client.newCall(request).execute()
+            str_response = response.body()!!.string()
+
         }
+
+        try {
+            Log.e("************", JSONObject(str_response).toString())
+        } catch (ex: JSONException) {
+            Log.e("************", str_response)
+            sendMessage(str_response)
+        }
+        return response
     }
     private inner class URLLookUp : AsyncTask<String, Void, Response>() {
         override fun doInBackground(vararg str: String): Response? {
@@ -163,11 +167,7 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
         }
 
         override fun onPostExecute(result: Response?) {
-            try {
-                JSONObject(result!!.body().toString())
-            } catch (ex: JSONException) {
-                sendMessage(result!!.headers().toString() + "\n" + result.body()!!.string())
-            }
+
         }
     }
 }
