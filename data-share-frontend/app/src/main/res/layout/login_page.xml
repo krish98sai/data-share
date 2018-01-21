@@ -19,6 +19,8 @@
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="40dp"
+            android:textColor="#f0ead6"
+            android:textColorHint="#f0ead6"
             android:hint="Email"
             android:inputType="textEmailAddress" />
 
@@ -27,6 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
+            android:textColor="#f0ead6"
+            android:textColorHint="#f0ead6"
             android:hint="Password"
             android:inputType="textPassword" />
 
@@ -44,7 +48,8 @@
                 android:layout_weight="1"
                 android:background="#174A61"
                 android:text="Register"
-                android:textColor="@android:color/white" />
+                android:textColor="#f0ead6"
+                />
 
             <Button
                 android:id="@+id/login"
@@ -53,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:text="Login"
                 android:layout_margin="2dp"
-                android:textColor="@android:color/white"
+                android:textColor="#f0ead6"
                 android:background="#174A61" />
 
         </LinearLayout>

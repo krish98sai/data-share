@@ -17,6 +17,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="40dp"
             android:hint="Email"
+            android:textColor="#f0ead6"
+            android:textColorHint="#f0ead6"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -25,6 +27,8 @@
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
             android:hint="Phone Number"
+            android:textColor="#f0ead6"
+            android:textColorHint="#f0ead6"
             android:inputType="phone" />
 
         <EditText
@@ -33,6 +37,8 @@
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
             android:hint="Password"
+            android:textColor="#f0ead6"
+            android:textColorHint="#f0ead6"
             android:inputType="textPassword" />
 
         <EditText
@@ -41,6 +47,8 @@
             android:layout_height="40dp"
             android:layout_marginBottom="10dp"
             android:hint="Password"
+            android:textColor="#f0ead6"
+            android:textColorHint="#f0ead6"
             android:inputType="textPassword" />
 
         <LinearLayout
@@ -55,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Register"
-                android:textColor="#ffffff"
+                android:textColor="#f0ead6"
                 android:background="#174A61"
                 android:layout_margin="2dp"/>
 

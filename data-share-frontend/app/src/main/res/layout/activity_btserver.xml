@@ -18,7 +18,8 @@
             android:background="#174A61"
             android:onClick="acceptConnection"
             android:text="Accept Connection"
-            android:textColor="@android:color/white" />
+            android:textColor="#f0ead6"
+            />
         <Space
             android:layout_width="0dp"
             android:layout_height="10dp"
@@ -32,9 +33,10 @@
             android:background="#174A61"
             android:onClick="cancelAcceptance"
             android:text="Cancel Acceptance"
-            android:textColor="@android:color/white" />
+            android:textColor="#f0ead6"
+            />
         <Space
-            android:layout_width="0p"
+            android:layout_width="0dp"
             android:layout_height="10dp"
             android:layout_weight="1" >
         </Space>
@@ -46,7 +48,8 @@
             android:background="#174A61"
             android:onClick="disconnect"
             android:text="Disconnect"
-            android:textColor="@android:color/white" />
+            android:textColor="#f0ead6"
+            />
     </LinearLayout>
 
     <LinearLayout
