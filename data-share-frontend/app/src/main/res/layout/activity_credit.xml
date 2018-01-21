@@ -24,6 +24,14 @@
 
             />
 
+        <EditText
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="#f0ead6"
+            />
+
         <Button
             android:id="@+id/add_credit"
             android:layout_width="match_parent"
@@ -49,11 +57,7 @@
             android:layout_marginRight="25dp"
             android:textColor="#f0ead6"
             />
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="match_parent"
