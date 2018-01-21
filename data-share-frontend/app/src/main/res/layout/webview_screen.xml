@@ -14,9 +14,14 @@
         <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:src="@drawable/gray_x"
             android:onClick="returnToScanScreen"/>
+        <ImageButton
+            android:id="@+id/submit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
         <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"

@@ -106,7 +106,7 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
     fun run(url: String): Response {
         lateinit var response : Response
         lateinit var str_response : String
-        if (url.substring(0, 51) == "http://get-data-share.com/payments/get_usable_bytes"){
+        if (url.length > 50 && url.substring(0, 51) == "http://get-data-share.com/payments/get_usable_bytes"){
             val request: Request = Request.Builder()
                     .header("access-token", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
                     .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))

@@ -6,10 +6,7 @@ import android.preference.PreferenceManager
 import android.view.View
 import android.webkit.WebView
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -29,18 +26,26 @@ class BTClientReceiveActivity : BTActivity(), BTClientCallbacks {
 
         btClient = BTClient(this, this)
         deviceMap = HashMap()
+
     }
 
     override fun onConnected() {
-        setContentView(R.layout.webview_screen)
-        findViewById<EditText>(R.id.search_bar).setOnEditorActionListener(){ v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_DONE) {
-                val str = (findViewById<EditText>(R.id.search_bar) as EditText).text.toString()
-                search(str)
-                true
-            }
-            false
+        if(mBTAdapter!!.isDiscovering){
+            mBTAdapter!!.cancelDiscovery()
         }
+        setContentView(R.layout.webview_screen)
+        findViewById<ImageButton>(R.id.submit).setOnClickListener{
+            var url = (findViewById<EditText>(R.id.search_bar) as EditText).text.toString()
+            search(url)
+        }
+//        findViewById<EditText>(R.id.search_bar).setOnEditorActionListener(){ v, actionId, event ->
+//            if(actionId == EditorInfo.IME_ACTION_DONE) {
+//                val str = (findViewById<EditText>(R.id.search_bar) as EditText).text.toString()
+//                search(str)
+//                true
+//            }
+//            false
+//        }
 
         btClient!!.sendMessage("{ \"uid\": \"" +
                 PreferenceManager.getDefaultSharedPreferences(this).getString("uid", "") + "\"}")
@@ -71,7 +76,7 @@ class BTClientReceiveActivity : BTActivity(), BTClientCallbacks {
     }
 
     fun search(url: String) {
-        //TODO protocol goes here
+        btClient!!.sendMessage("{\"url\":\"" + url +"\"}")
     }
 
     override fun onBluetoothDiscover(device: BluetoothDevice) {

@@ -44,7 +44,7 @@ class LoginActivity : Activity(){
             if(activeNetworkInfo == null || !(activeNetworkInfo.isConnected)){
                 Toast.makeText(applicationContext, "Not connected to internet", Toast.LENGTH_SHORT).show()
                 //redirect to receiver page
-                var intent = Intent(this, BTClientActivity::class.java)
+                var intent = Intent(this, BTClientReceiveActivity::class.java)
                 startActivity(intent)
             }else {
                 Toast.makeText(applicationContext, "Connected to internet", Toast.LENGTH_SHORT).show()
