@@ -25,7 +25,7 @@ class LoginActivity : Activity(){
 
         if(PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")){
             setContentView(R.layout.login_page);
-            findViewById<Button>(R.id.register).setOnClickListener { //TODO HTTP requests
+            (findViewById(R.id.register) as Button).setOnClickListener { //TODO HTTP requests
                 var intent = Intent(this, SignupActivity::class.java)
                 startActivity(intent)
 
@@ -37,10 +37,7 @@ class LoginActivity : Activity(){
             }
         }else{
             //TODO make more secure by checking tocken if internet connection
-
-            //go to next Page
-            var intent = Intent(this, MenuActivity::class.java)
-            startActivity(intent)
+            URLLookUp().execute("http://get-data-share.com/check_token")
 
 
 
@@ -52,15 +49,13 @@ class LoginActivity : Activity(){
     fun run(url: String): JSONObject {
         lateinit var request: Request
         if(!PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")) {
-            val requestBody = MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .build()
+
 
             request = Request.Builder()
                     .header("access-token", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
-                    .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
+                    .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
+                    .header("client", PreferenceManager.getDefaultSharedPreferences(this).getString("client", ""))
                     .url(url)
-                    .post(requestBody)
                     .build()
         }else{
             val requestBody = MultipartBody.Builder()
@@ -75,7 +70,9 @@ class LoginActivity : Activity(){
                     .build()
         }
         val response = client.newCall(request).execute()
-        var obj = JSONObject(response.body()!!.string())
+        var str = response.body()!!.string()
+        Log.e("Something123", str)
+        var obj = JSONObject(str)
 
         if(!PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")) {
 
@@ -90,6 +87,7 @@ class LoginActivity : Activity(){
             }else{
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putString("AuthenticationToken", response.header("access-token").toString()).apply();
                 PreferenceManager.getDefaultSharedPreferences(this).edit().putString("uid", response.header("uid").toString()).apply();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("client", response.header("client").toString()).apply();
                 var intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
             }

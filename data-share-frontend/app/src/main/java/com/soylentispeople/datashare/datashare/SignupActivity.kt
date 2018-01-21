@@ -42,6 +42,7 @@ class SignupActivity: Activity(){
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("email", (findViewById(R.id.email) as EditText).text.toString())
                     .addFormDataPart("password", (findViewById(R.id.password) as EditText).text.toString())
+                    .addFormDataPart("phone", (findViewById(R.id.phoneNumber) as EditText).text.toString())
                     .build()
 
             request = Request.Builder()
