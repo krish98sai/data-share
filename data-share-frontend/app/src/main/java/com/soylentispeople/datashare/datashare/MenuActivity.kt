@@ -13,10 +13,12 @@ class MenuActivity: Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_menu_activity)
         findViewById<Button>(R.id.ProvideMenu).setOnClickListener {
-            //var intent = Intent(this, this)
+            var intent = Intent(this, ProviderSettings::class.java)
+            startActivity(intent)
         }
         findViewById<Button>(R.id.ReciveMenu).setOnClickListener {
-            //var intent = Intent(this, this)
+            var intent = Intent(this, BTClientActivity::class.java)
+            startActivity(intent)
         }
         findViewById<Button>(R.id.addCredit).setOnClickListener {
             //var intent = Intent(this, this)

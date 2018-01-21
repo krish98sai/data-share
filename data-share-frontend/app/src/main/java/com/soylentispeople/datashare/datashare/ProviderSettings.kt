@@ -62,12 +62,15 @@ class ProviderSettings : Activity(){
 
             val myDevice = BluetoothAdapter.getDefaultAdapter()
             if (myDevice != null) {
-                myDevice.setName("Data-Share Provider");
+                myDevice.name = "Data-Share Provider"
             }
-            val deviceName = myDevice.getName()
+            val deviceName = myDevice.name
             Toast.makeText(applicationContext, "Your current device name:" + deviceName, Toast.LENGTH_LONG).show()
 
             simpleAlert.show()
+
+            var intent = Intent(this, BTServerActivity::class.java)
+            startActivity(intent)
         }
     }
 
