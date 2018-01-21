@@ -1,5 +1,5 @@
 class PaymentsController < ApplicationController
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   @@conversion_rate = 214748364.8
 
   def get_credit
@@ -25,4 +25,20 @@ class PaymentsController < ApplicationController
 
     render json: "{ \"credit\": \"" + @user_provider.credit.to_s + "\" }"
   end
+
+  def client_token
+    render json: gateway.client_token.generate
+  end
+
+  protected
+
+  def gateway
+    @gateway = Braintree::Gateway.new(
+      :environment => :sandbox,
+      :merchant_id => "2d743qb2qq2y4xqt",
+      :public_key => "4q99v47dj6bpmcb5",
+      :private_key => "fd6fdaf302030b612f80f0b5c6dbd782",
+    )
+  end
+
 end
