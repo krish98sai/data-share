@@ -3,7 +3,8 @@ package com.soylentispeople.datashare.datashare
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.Intent
+import android.bluetooth.BluetoothProfile
+import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -11,10 +12,8 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
-import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -115,12 +114,6 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
         super.onDestroy()
     }
 
-<<<<<<< HEAD
-
-
-
-
-
     var client = OkHttpClient()
 
     fun run(url: String): JSONObject {
@@ -153,8 +146,6 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
         }
     }
 
-}
-=======
     inner class BTPanServiceListener(private val context: Context) : BluetoothProfile.ServiceListener {
 
         override fun onServiceConnected(profile: Int,
@@ -166,4 +157,3 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
         override fun onServiceDisconnected(profile: Int) {}
     }
 }
->>>>>>> tethering-2
