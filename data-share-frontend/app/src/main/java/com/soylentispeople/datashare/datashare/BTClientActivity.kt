@@ -32,7 +32,7 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
         val myDevice = BluetoothAdapter.getDefaultAdapter()
         val simpleAlert = AlertDialog.Builder(this).create()
         simpleAlert.setTitle("Bluetooth Settings Change")
-        simpleAlert.setMessage("Your bluetooth name will be changed to: Data-Share Receiver")
+        simpleAlert.setMessage("Your bluetooth name will be changed to: " + getString(R.string.receiver_bt_name))
 
         simpleAlert.setButton(AlertDialog.BUTTON_POSITIVE, "ACCEPT", { dialogInterface, i ->
             Toast.makeText(applicationContext, "Bluetooth name changed", Toast.LENGTH_SHORT).show()

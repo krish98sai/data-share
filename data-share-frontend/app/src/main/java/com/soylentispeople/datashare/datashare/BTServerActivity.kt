@@ -68,6 +68,22 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
 
     override fun onConnected() {
         Log.i("BTServer", "Successful connection established")
+
+        //Survey paired devices for name
+        for(device in mBTAdapter!!.bondedDevices) {
+            if(device.name.equals(getString(R.string.receiver_bt_name))) {
+                var classBluetoothPan = Class.forName("android.bluetooth.BluetoothPan")
+                var mBTPanConnect = classBluetoothPan.getDeclaredMethod("connect", BluetoothDevice::class.java)
+                var BTPanConstructor = classBluetoothPan.getDeclaredConstructor(
+                        Context::class.java,
+                        BluetoothProfile.ServiceListener::class.java)
+                BTPanConstructor.setAccessible(true)
+                var BTSrvInstance = BTPanConstructor.newInstance(this, BTPanServiceListener(this))
+
+                mBTPanConnect.invoke(BTSrvInstance, device)
+                break
+            }
+        }
     }
 
     override fun onConnectionFail() {
@@ -99,6 +115,7 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
         super.onDestroy()
     }
 
+<<<<<<< HEAD
 
 
 
@@ -137,3 +154,16 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
     }
 
 }
+=======
+    inner class BTPanServiceListener(private val context: Context) : BluetoothProfile.ServiceListener {
+
+        override fun onServiceConnected(profile: Int,
+                                        proxy: BluetoothProfile) {
+            //Some code must be here or the compiler will optimize away this callback.
+            Log.e("MyApp", "BTPan proxy connected")
+        }
+
+        override fun onServiceDisconnected(profile: Int) {}
+    }
+}
+>>>>>>> tethering-2
