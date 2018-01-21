@@ -2,4 +2,5 @@
     <string name="app_name">Data Share</string>
     <string name="location_access_error">Location serveices must be enabled to access bluetooth</string>
     <string name="GLOBAL_UUID">91ba11f2-fabe-feab-face-00805F9B34FB</string>
+    <string name="receiver_bt_name">Data-Share Receiver</string>
 </resources>
