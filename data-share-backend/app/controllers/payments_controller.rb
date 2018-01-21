@@ -1,5 +1,5 @@
 class PaymentsController < ApplicationController
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
   @@conversion_rate = 214748364.8
 
   def get_credit
@@ -28,6 +28,29 @@ class PaymentsController < ApplicationController
 
   def client_token
     render json: gateway.client_token.generate
+  end
+
+  def checkout
+    nonce = params[:payment_method_nonce]
+    amount = params[:amount]
+
+    result = gateway.transaction.sale(
+      amount: amount,
+      payment_method_nonce: nonce,
+      :options => {
+        :submit_for_settlement => true
+      }
+    )
+
+    if result.success? || result.transaction
+      @user_provider = current_user
+      user_provider_credit_curr = @user_provider.credit
+      @user_provider.update!(credit: user_provider_credit_curr + amount.to_f)
+
+      render json: "{\"status\":\"success\"}"
+    else
+      render json: "{ \"errors\": [{\"error\": \"Unable to submit transaction. Try again later.\"}]}"
+    end
   end
 
   protected
