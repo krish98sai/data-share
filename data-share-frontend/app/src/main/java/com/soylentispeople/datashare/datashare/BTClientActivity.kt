@@ -44,7 +44,8 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
 
     override fun onConnected() {
         Log.i("BTClient", "Successful connection established")
-        btClient!!.sendMessage("ClientID: "+PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""));
+        btClient!!.sendMessage("ClientID: "+PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
+        btClient!!.sendMessage("BDevice: " + mBTAdapter!!.address)
     }
 
     override fun onConnectionFail() {
