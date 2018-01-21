@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import java.util.*
 
 /**
@@ -51,6 +52,11 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
 
     override fun onMessageReceived(message: String) {
         Log.i("BTServer", "Message received. Contents: " + message)
+        if(message.length > 10 && message.substring(0,10).equals("ClientID: ")){
+            var user_id = message.substring(10);
+            Toast.makeText(this, user_id, Toast.LENGTH_LONG).show();
+            //TODO send server the client id here. Ask sai for what exactly to send.
+        }
     }
 
     override fun onBluetoothDiscover(device: BluetoothDevice) {

@@ -2,6 +2,7 @@ package com.soylentispeople.datashare.datashare
 
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -43,6 +44,7 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
 
     override fun onConnected() {
         Log.i("BTClient", "Successful connection established")
+        btClient!!.sendMessage("ClientID: "+PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""));
     }
 
     override fun onConnectionFail() {
