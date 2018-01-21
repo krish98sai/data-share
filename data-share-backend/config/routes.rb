@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'payments/get_credit'
   get 'payments/get_usable_bytes'
+  post 'payments/execute_transaction'
 
   root 'application#root'
 
