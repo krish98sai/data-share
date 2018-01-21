@@ -63,21 +63,7 @@ class ProviderSettings : Activity(){
 
         var button = findViewById<Button>(R.id.on_off) as Button
         button.setOnClickListener {
-            val simpleAlert = AlertDialog.Builder(this).create()
-            simpleAlert.setTitle("Bluetooth Settings Change")
-            simpleAlert.setMessage("Your bluetooth name will be changed to: Data-Share Provider")
-            simpleAlert.setButton(AlertDialog.BUTTON_POSITIVE, "AGREE", { dialogInterface, i ->
-                Toast.makeText(applicationContext, "Bluetooth name changed", Toast.LENGTH_SHORT).show()
-            })
 
-            val myDevice = BluetoothAdapter.getDefaultAdapter()
-            if (myDevice != null) {
-                myDevice.name = "Data-Share Provider"
-            }
-            val deviceName = myDevice.name
-            Toast.makeText(applicationContext, "Your current device name:" + deviceName, Toast.LENGTH_LONG).show()
-
-            simpleAlert.show()
 
             var intent = Intent(this, BTServerActivity::class.java)
             startActivity(intent)

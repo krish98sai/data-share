@@ -1,10 +1,13 @@
 package com.soylentispeople.datashare.datashare
 
+import android.app.AlertDialog
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import java.util.*
 
 /**
@@ -16,6 +19,24 @@ class BTServerActivity: BTActivity(), BTServerCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val myDevice = BluetoothAdapter.getDefaultAdapter()
+        val simpleAlert = AlertDialog.Builder(this).create()
+        simpleAlert.setTitle("Bluetooth Settings Change")
+        simpleAlert.setMessage("Your bluetooth name will be changed to: Data-Share Provider")
+        simpleAlert.setButton(AlertDialog.BUTTON_POSITIVE, "AGREE", { dialogInterface, i ->
+            Toast.makeText(applicationContext, "Bluetooth name changed", Toast.LENGTH_SHORT).show()
+            val deviceName = myDevice.name
+            Toast.makeText(applicationContext, "Your current device name:" + deviceName, Toast.LENGTH_LONG).show()
+        })
+
+        if (myDevice != null) {
+            myDevice.name = "Data-Share Provider"
+        }
+        simpleAlert.show()
+
+
+
         setContentView(R.layout.activity_btserver)
         btServer = BTServer(this, mBTAdapter!!, this)
     }
