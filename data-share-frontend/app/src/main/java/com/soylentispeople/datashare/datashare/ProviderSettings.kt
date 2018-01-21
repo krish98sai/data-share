@@ -73,5 +73,4 @@ class ProviderSettings : Activity(){
             startActivity(intent)
         }
     }
-
 }

@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
+  get 'payments/get_credit'
+
   root 'application#root'
 
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
-    sessions: 'sessions'
+    sessions: 'sessions',
+    registrations: 'registrations'
   }
 
   devise_scope :user do
