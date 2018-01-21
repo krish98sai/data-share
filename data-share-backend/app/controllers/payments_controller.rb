@@ -27,7 +27,7 @@ class PaymentsController < ApplicationController
   end
 
   def client_token
-    render json: gateway.client_token.generate
+    render json: "{ \"client_token\" : \"" + gateway.client_token.generate + "\"}"
   end
 
   def checkout

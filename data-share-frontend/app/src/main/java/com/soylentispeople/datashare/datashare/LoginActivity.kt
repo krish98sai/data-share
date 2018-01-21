@@ -100,7 +100,7 @@ class LoginActivity : Activity(){
 
     private inner class URLLookUp : AsyncTask<String, Void, JSONObject>() {
         override fun doInBackground(vararg str: String): JSONObject? {
-            return run(str[0]);
+            return run(str[0])
         }
 
         override fun onPostExecute(result: JSONObject?) {
