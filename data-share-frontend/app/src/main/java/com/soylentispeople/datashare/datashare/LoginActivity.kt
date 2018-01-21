@@ -21,10 +21,6 @@ class LoginActivity : Activity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intent = Intent(this, BTClientReceiveActivity::class.java)
-        startActivity(intent)
-
-        return
         if(PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")){
             setContentView(R.layout.login_page);
             (findViewById<Button>(R.id.register) as Button).setOnClickListener { //TODO HTTP requests

@@ -2,9 +2,13 @@ package com.soylentispeople.datashare.datashare
 
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -28,14 +32,25 @@ class BTClientReceiveActivity : BTActivity(), BTClientCallbacks {
 
     override fun onConnected() {
         setContentView(R.layout.webview_screen)
+        findViewById<EditText>(R.id.search_bar).setOnEditorActionListener(){ v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE) {
+                val str = (findViewById<EditText>(R.id.search_bar) as EditText).text.toString()
+                search(str)
+                true
+            }
+            false
+        }
+
+        btClient!!.sendMessage("{ \"uid\": \"" +
+                PreferenceManager.getDefaultSharedPreferences(this).getString("uid", "") + "\"}")
     }
 
     override fun onConnectionFail() {
-        //TODO notify user
+        Toast.makeText(this, "Bluetooth connection failed", Toast.LENGTH_SHORT)
     }
 
     override fun onDisconnect() {
-        //TODO notify user
+        setContentView(R.layout.client_connecting_screen)
     }
 
     override fun onMessageReceived(message: String) {
@@ -52,11 +67,10 @@ class BTClientReceiveActivity : BTActivity(), BTClientCallbacks {
 
     fun returnToScanScreen(view: View) {
         btClient!!.disconnect()
-        setContentView(R.layout.client_connecting_screen)
     }
 
-    fun search(view: View) {
-
+    fun search(url: String) {
+        //TODO protocol goes here
     }
 
     override fun onBluetoothDiscover(device: BluetoothDevice) {
