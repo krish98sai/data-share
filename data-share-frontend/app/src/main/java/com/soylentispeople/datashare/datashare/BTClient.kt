@@ -16,12 +16,13 @@ import java.util.*
 class BTClient : Closeable {
 
     var mActivity: Activity? = null
-
     var listener: BTClientCallbacks? = null
 
     /**
      * Socket is always null when not connected
      */
+    var isConnected: Boolean = false
+    var connectedDevice: BluetoothDevice? = null
     var socket: BluetoothSocket? = null
     var connectingThread: Thread? = null
     var receivingThread: Thread? = null
@@ -42,16 +43,15 @@ class BTClient : Closeable {
         }
 
         //Socket is never null while connected
-        if(socket != null) {
-            socket!!.close()
-            socket = null
-        }
+        closeConnectionSequence()
 
         connectingThread = Thread({
             try {
                 socket = device.createRfcommSocketToServiceRecord(uuid)
                 socket!!.connect()
                 //Connection successful, dispatch onConnected from listener
+                connectedDevice = device
+                isConnected = true
                 mActivity!!.runOnUiThread({listener!!.onConnected()})
 
                 //Start receiving messages
@@ -73,10 +73,7 @@ class BTClient : Closeable {
     }
 
     fun disconnect() {
-        if(socket != null) {
-            socket!!.close()
-            socket = null
-        }
+        closeConnectionSequence()
     }
 
     fun sendMessage(message: String) {
@@ -96,17 +93,9 @@ class BTClient : Closeable {
 
 
             } catch(e: IOException) {
-                if(socket != null) {
-                    socket!!.close()
-                    socket = null
-                    mActivity!!.runOnUiThread({listener!!.onDisconnect()})
-                }
+                closeConnectionSequence()
             } catch(e1: Exception) {
-                if(socket != null) {
-                    socket!!.close()
-                    socket = null
-                    mActivity!!.runOnUiThread({listener!!.onDisconnect()})
-                }
+                closeConnectionSequence()
             }
         }).start()
     }
@@ -114,6 +103,10 @@ class BTClient : Closeable {
     override fun close() {
         if(connectingThread != null && connectingThread!!.isAlive) {
             connectingThread!!.interrupt()
+        }
+
+        if(receivingThread != null && receivingThread!!.isAlive) {
+            receivingThread!!.interrupt()
         }
     }
 
@@ -148,21 +141,22 @@ class BTClient : Closeable {
             }
 
             //Loop terminated, connection severing initiated
-            if (socket != null) {
-                socket!!.close()
-                socket = null
-            }
+            closeConnectionSequence()
             mActivity!!.runOnUiThread({ listener!!.onDisconnect() })
         } catch(e: InterruptedException) {
-            if (socket != null) {
-                socket!!.close()
-                socket = null
-            }
+            closeConnectionSequence()
         } catch(e1: IOException) {
-            if (socket != null) {
-                socket!!.close()
-                socket = null
-            }
+            closeConnectionSequence()
+        }
+    }
+
+    private fun closeConnectionSequence() {
+        if (socket != null) {
+            socket!!.close()
+            socket = null
+            connectedDevice = null
+            mActivity!!.runOnUiThread({ listener!!.onDisconnect() })
+            isConnected = false
         }
     }
 }
