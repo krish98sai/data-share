@@ -23,8 +23,8 @@ class SignupActivity: Activity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.signup_page);
         findViewById<Button>(R.id.register).setOnClickListener { //TODO HTTP requests
-            if((findViewById(R.id.password)as EditText).text.toString().equals((findViewById(R.id.password2)as EditText).text.toString())){
-                if((findViewById(R.id.password)as EditText).text.toString().length > 7){
+            if((findViewById<EditText>(R.id.password)as EditText).text.toString().equals((findViewById<EditText>(R.id.password2)as EditText).text.toString())){
+                if((findViewById<EditText>(R.id.password)as EditText).text.toString().length > 7){
                     URLLookUp().execute("http://get-data-share.com/auth")
                 }
             }
@@ -40,9 +40,9 @@ class SignupActivity: Activity(){
 
             val requestBody = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("email", (findViewById(R.id.email) as EditText).text.toString())
-                    .addFormDataPart("password", (findViewById(R.id.password) as EditText).text.toString())
-                    .addFormDataPart("phone", (findViewById(R.id.phoneNumber) as EditText).text.toString())
+                    .addFormDataPart("email", (findViewById<EditText>(R.id.email) as EditText).text.toString())
+                    .addFormDataPart("password", (findViewById<EditText>(R.id.password) as EditText).text.toString())
+                    .addFormDataPart("phone", (findViewById<EditText>(R.id.phoneNumber) as EditText).text.toString())
                     .build()
 
             request = Request.Builder()
@@ -62,11 +62,16 @@ class SignupActivity: Activity(){
         }
 
         override fun onPostExecute(result: JSONObject?) {
-
             if( result!!.has("errors") ){
 
             }else{
-                setContentView(R.layout.signup_confirm_page);
+                setContentView(R.layout.signup_confirm_page)
+                var button = findViewById<Button>(R.id.returnToLogin) as Button
+                button.setOnClickListener {
+                    setContentView(R.layout.login_page)
+                    var intent = Intent(this@SignupActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                }
             }
         }
     }

@@ -46,15 +46,17 @@ class ProviderSettings : Activity(){
 
 
         bluetoothNameChange()
-        //back()
+        back()
     }
 
-    /*fun back(){
+    fun back(){
         var button = findViewById<Button>(R.id.back) as Button
         button.setOnClickListener {
             setContentView(R.layout.main_menu_activity)
+            var intent = Intent(this, MenuActivity::class.java)
+            startActivity(intent)
         }
-    }*/
+    }
 
     fun bluetoothNameChange(){
         val myDevice = BluetoothAdapter.getDefaultAdapter()
