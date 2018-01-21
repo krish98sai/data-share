@@ -1,55 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="12"
-        android:layout_marginTop="100dp">
+        android:layout_height="300dp"
+        android:layout_marginTop="5dp"
+        android:weightSum="12">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="50dp"
-            android:layout_weight="5">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Connect"
-                android:layout_gravity="center_vertical"
-                android:onClick="connect"/>
+            android:layout_weight="5"
+            android:orientation="vertical">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Disconnect"
                 android:layout_gravity="center_vertical"
-                android:onClick="disconnect"/>
+                android:onClick="connect"
+                android:background="#184A61"
+                android:textColor="@android:color/white"
+                android:text="Connect" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1" >
+            </Space>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Scan"
                 android:layout_gravity="center_vertical"
-                android:onClick="scan"/>
+                android:onClick="disconnect"
+                android:background="#174A61"
+                android:textColor="@android:color/white"
+                android:text="Disconnect" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_weight="1" >
+            </Space>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:onClick="scan"
+                android:background="#174A61"
+                android:textColor="@android:color/white"
+                android:text="Scan" />
 
         </LinearLayout>
 
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="50dp"
             android:layout_weight="7"
-            android:background="@drawable/simple_border">
+            android:background="@drawable/simple_border"
+            android:textColor="@android:color/white">
+
             <LinearLayout
+                android:id="@+id/device_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/device_list">
+                android:orientation="vertical">
 
             </LinearLayout>
         </ScrollView>
@@ -69,7 +91,7 @@
             android:hint="Message..."
             android:id="@+id/message_text"/>
         <Button
-            android:layout_width="0dp"
+            android:layout_width="10dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Send"
