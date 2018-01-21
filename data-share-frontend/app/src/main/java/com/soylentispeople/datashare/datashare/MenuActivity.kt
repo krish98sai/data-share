@@ -20,7 +20,7 @@ class MenuActivity: Activity() {
             startActivity(intent)
         }
         findViewById<Button>(R.id.ReciveMenu).setOnClickListener {
-            var intent = Intent(this, BTClientActivity::class.java)
+            var intent = Intent(this, BTClientReceiveActivity::class.java)
             startActivity(intent)
         }
         findViewById<Button>(R.id.addCredit).setOnClickListener {

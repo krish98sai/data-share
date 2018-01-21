@@ -1,13 +1,17 @@
 package com.soylentispeople.datashare.datashare
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -34,9 +38,18 @@ class LoginActivity : Activity(){
 
             }
         }else{
-            //TODO make more secure by checking tocken if internet connection
-            URLLookUp().execute("http://get-data-share.com/check_token")
-
+            //TODO make more secure by checking token if internet connection
+            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val activeNetworkInfo = connectivityManager.activeNetworkInfo
+            if(activeNetworkInfo == null || !(activeNetworkInfo.isConnected)){
+                Toast.makeText(applicationContext, "Not connected to internet", Toast.LENGTH_SHORT).show()
+                //redirect to receiver page
+                var intent = Intent(this, BTClientActivity::class.java)
+                startActivity(intent)
+            }else {
+                Toast.makeText(applicationContext, "Connected to internet", Toast.LENGTH_SHORT).show()
+                URLLookUp().execute("http://get-data-share.com/check_token")
+            }
 
 
         }

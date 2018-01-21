@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/gradient"
     android:weightSum="12">
     <FrameLayout
         android:layout_width="wrap_content"
@@ -14,6 +15,8 @@
             android:layout_height="wrap_content"
             android:text="Scan"
             android:layout_gravity="center"
+            android:textColor="#f0ead6"
+            android:background="#174A61"
             android:onClick="scan"/>
     </FrameLayout>
     
@@ -45,6 +48,8 @@
             android:layout_height="wrap_content"
             android:text="Connect"
             android:layout_gravity="center"
+            android:textColor="#f0ead6"
+            android:background="#174A61"
             android:onClick="connect"/>
     </FrameLayout>
 </LinearLayout>
