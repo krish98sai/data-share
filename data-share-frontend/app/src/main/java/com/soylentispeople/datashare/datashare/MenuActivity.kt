@@ -1,0 +1,25 @@
+package com.soylentispeople.datashare.datashare
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.widget.Button
+
+/**
+ * Created by adity on 1/20/2018.
+ */
+class MenuActivity: Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.main_menu_activity)
+        findViewById<Button>(R.id.ProvideMenu).setOnClickListener {
+            //var intent = Intent(this, this)
+        }
+        findViewById<Button>(R.id.ReciveMenu).setOnClickListener {
+            //var intent = Intent(this, this)
+        }
+        findViewById<Button>(R.id.addCredit).setOnClickListener {
+            //var intent = Intent(this, this)
+        }
+    }
+}
