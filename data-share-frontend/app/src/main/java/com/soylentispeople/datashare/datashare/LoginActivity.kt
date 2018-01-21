@@ -6,13 +6,11 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.webkit.WebView
 import android.widget.Button
 import android.widget.EditText
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 
 
 /**
@@ -23,6 +21,10 @@ class LoginActivity : Activity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val intent = Intent(this, BTClientReceiveActivity::class.java)
+        startActivity(intent)
+
+        return
         if(PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", "").equals("")){
             setContentView(R.layout.login_page);
             (findViewById<Button>(R.id.register) as Button).setOnClickListener { //TODO HTTP requests
