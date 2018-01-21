@@ -22,13 +22,10 @@ class MenuActivity: Activity() {
         findViewById<Button>(R.id.ReciveMenu).setOnClickListener {
             var intent = Intent(this, BTClientActivity::class.java)
             startActivity(intent)
-
-            /*changes bluetooth name*/
-
-
         }
         findViewById<Button>(R.id.addCredit).setOnClickListener {
-            //var intent = Intent(this, this)
+            var intent = Intent(this, CreditActivity::class.java)
+            startActivity(intent)
         }
     }
 }

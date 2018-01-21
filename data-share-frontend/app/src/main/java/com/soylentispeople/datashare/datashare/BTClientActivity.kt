@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -31,7 +32,7 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
         val myDevice = BluetoothAdapter.getDefaultAdapter()
         val simpleAlert = AlertDialog.Builder(this).create()
         simpleAlert.setTitle("Bluetooth Settings Change")
-        simpleAlert.setMessage("Your bluetooth name will be changed to: Data-Share Receiver")
+        simpleAlert.setMessage("Your bluetooth name will be changed to: " + getString(R.string.receiver_bt_name))
 
         simpleAlert.setButton(AlertDialog.BUTTON_POSITIVE, "ACCEPT", { dialogInterface, i ->
             Toast.makeText(applicationContext, "Bluetooth name changed", Toast.LENGTH_SHORT).show()
@@ -62,6 +63,8 @@ class BTClientActivity: BTActivity(), BTClientCallbacks {
 
     override fun onConnected() {
         Log.i("BTClient", "Successful connection established")
+        btClient!!.sendMessage("ClientID: "+PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
+        btClient!!.sendMessage("BDevice: " + mBTAdapter!!.address)
     }
 
     override fun onConnectionFail() {

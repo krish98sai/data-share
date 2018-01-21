@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="5"
+        android:background="@drawable/gradient">
+
+        <Button
+            android:id="@+id/get_balance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_weight="1"
+            android:background="#174A61"
+            android:text="Current Balance"
+            android:textColor="#f0ead6"
+
+            />
+
+        <EditText
+            android:id="@+id/amount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="#f0ead6"
+            />
+
+        <Button
+            android:id="@+id/add_credit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Add Credit"
+            android:layout_margin="5dp"
+            android:background="#174A61"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:textColor="#f0ead6"
+            />
+
+        <Button
+            android:id="@+id/redeem_credit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Redeem Credit"
+            android:layout_margin="5dp"
+            android:background="#174A61"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:textColor="#f0ead6"
+            />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

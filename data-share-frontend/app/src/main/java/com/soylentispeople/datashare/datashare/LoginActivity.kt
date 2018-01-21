@@ -98,9 +98,9 @@ class LoginActivity : Activity(){
             if( obj!!.has("errors") && (obj.get("errors") as JSONArray).get(0).equals("Invalid login credentials. Please try again.")){
                 Log.e("what is happening?", "THis is happpeing")
             }else{
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("AuthenticationToken", response.header("access-token").toString()).apply();
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("uid", response.header("uid").toString()).apply();
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("client", response.header("client").toString()).apply();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("AuthenticationToken", response.header("access-token").toString()).apply()
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("uid", response.header("uid").toString()).apply()
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putString("client", response.header("client").toString()).apply()
                 var intent = Intent(this, MenuActivity::class.java)
                 startActivity(intent)
             }
@@ -113,7 +113,7 @@ class LoginActivity : Activity(){
 
     private inner class URLLookUp : AsyncTask<String, Void, JSONObject>() {
         override fun doInBackground(vararg str: String): JSONObject? {
-            return run(str[0]);
+            return run(str[0])
         }
 
         override fun onPostExecute(result: JSONObject?) {

@@ -7,6 +7,8 @@ end
 
 # Devise token auth for authentication tokens
 gem 'devise_token_auth'
+# Braintree for payments
+gem "braintree", "~> 2.81.0"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.4'

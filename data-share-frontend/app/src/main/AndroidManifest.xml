@@ -25,11 +25,13 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".CreditActivity"/>
         <activity android:name=".BTClientActivity"/>
         <activity android:name=".BTServerActivity"/>
         <activity android:name=".SignupActivity"/>
         <activity android:name=".MenuActivity"/>
         <activity android:name=".ProviderSettings"/>
+
     </application>
 
 </manifest>
