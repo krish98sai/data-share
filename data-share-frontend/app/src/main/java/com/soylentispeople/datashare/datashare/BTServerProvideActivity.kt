@@ -7,23 +7,26 @@ package com.soylentispeople.datashare.datashare
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothProfile
-import android.content.Context
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import org.json.JSONObject
 import java.util.*
+import org.json.JSONException
+import java.net.URL
+
 
 class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
 
     var btServer: BTServer? = null
+    var used_bytes = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +64,8 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
         btServer!!.disconnect()
     }
 
-    fun sendMessage(view: View) {
-        val messageBox = findViewById<EditText>(R.id.message_text)
-        btServer!!.sendMessage(messageBox.text.toString())
+    fun sendMessage(response: String) {
+        btServer!!.sendMessage(response)
     }
 
     override fun onConnected() {
@@ -76,13 +78,25 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
 
     override fun onDisconnect() {
         Log.i("BTServer", "Disconnected")
+        URLLookUp().execute("http://get-data-share.com/payments/execute_transaction")
     }
 
     override fun onMessageReceived(message: String) {
+        val json = JSONObject(message)
+        if(json.has("url")){
+            val url = json.get("url").toString()
+            URLLookUp().execute(url)
+        }
+        else if (json.has("uid")){
+            val uid = json.get("uid").toString()
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("receiver-uid", uid).apply()
+            URLLookUp().execute("http://get-data-share.com/payments/get_usable_bytes?uid=" + uid)
+        }
+
         Log.i("BTServer", "Message received. Contents: " + message)
         if(message.length > 10 && message.substring(0,10).equals("ClientID: ")){
             var user_id = message.substring(10)
-            URLLookUp().execute("http://get-data-share.com/payments/get_usable_bytes?uid="+ user_id);
+            URLLookUp().execute("http://get-data-share.com/payments/get_usable_bytes?uid="+ user_id)
             //TODO send server the client id here. Ask sai for what exactly to send.
         }else if(message.length > 9 && message.substring(0,9).equals("BDevice: ")){
             var BDevice = message.substring(9)
@@ -101,31 +115,59 @@ class BTServerProvideActivity: BTActivity(), BTServerCallbacks {
 
     var client = OkHttpClient()
 
-    fun run(url: String): JSONObject {
-        var request: Request = Request.Builder()
-                .header("access-token", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
-                .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
-                .header("client", PreferenceManager.getDefaultSharedPreferences(this).getString("client", ""))
-                .url(url)
-                .build()
+    fun run(url: String): Response {
+        if (url.substring(0..51) == "http://get-data-share.com/payments/get_usable_bytes"){
+            val request: Request = Request.Builder()
+                    .header("access-token", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
+                    .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
+                    .header("client", PreferenceManager.getDefaultSharedPreferences(this).getString("client", ""))
+                    .url(url)
+                    .build()
 
-        val response = client.newCall(request).execute()
-        var str = response.body()!!.string()
+            val response = client.newCall(request).execute()
+            val str = response.body()!!.string()
 
-        var obj = JSONObject(str)
-        PreferenceManager.getDefaultSharedPreferences(this).edit().putString("bytes", obj!!.get("bytes").toString()).apply()
+            val obj = JSONObject(str)
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("receiver_bytes", obj!!.get("bytes").toString()).apply()
 
+            return response
+        }
+        else if (url == "http://get-data-share.com/payments/execute_transaction"){
+            val requestBody = MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("receiver_uid", ""))
+                    .addFormDataPart("bytes", used_bytes.toString())
+                    .build()
 
+            val request = Request.Builder()
+                    .header("access-token", PreferenceManager.getDefaultSharedPreferences(this).getString("AuthenticationToken", ""))
+                    .header("uid", PreferenceManager.getDefaultSharedPreferences(this).getString("uid", ""))
+                    .header("client", PreferenceManager.getDefaultSharedPreferences(this).getString("client", ""))
+                    .url(url)
+                    .post(requestBody)
+                    .build()
 
-        return obj
+            return client.newCall(request).execute()
+        }
+        else{
+            val request: Request = Request.Builder()
+                    .url(url)
+                    .build()
+
+            return client.newCall(request).execute()
+        }
     }
-    private inner class URLLookUp : AsyncTask<String, Void, JSONObject>() {
-        override fun doInBackground(vararg str: String): JSONObject? {
+    private inner class URLLookUp : AsyncTask<String, Void, Response>() {
+        override fun doInBackground(vararg str: String): Response? {
             return run(str[0])
         }
 
-        override fun onPostExecute(result: JSONObject?) {
-
+        override fun onPostExecute(result: Response?) {
+            try {
+                JSONObject(result!!.body().toString())
+            } catch (ex: JSONException) {
+                sendMessage(result!!.headers().toString() + "\n" + result.body()!!.string())
+            }
         }
     }
 }
