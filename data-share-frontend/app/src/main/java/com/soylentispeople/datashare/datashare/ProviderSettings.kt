@@ -65,7 +65,7 @@ class ProviderSettings : Activity(){
         button.setOnClickListener {
 
 
-            var intent = Intent(this, BTServerActivity::class.java)
+            var intent = Intent(this, BTServerProvideActivity::class.java)
             startActivity(intent)
         }
     }

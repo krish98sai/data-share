@@ -9,14 +9,12 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
-import android.webkit.WebView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 
 
 /**
