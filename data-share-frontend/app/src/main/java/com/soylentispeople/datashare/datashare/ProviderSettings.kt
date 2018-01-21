@@ -19,7 +19,7 @@ import android.net.NetworkInfo
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiInfo
-
+import com.soylentispeople.datashare.datashare.R.id.back
 
 
 /**
@@ -42,11 +42,19 @@ class ProviderSettings : Activity(){
             Toast.makeText(applicationContext, "Not connected to internet", Toast.LENGTH_SHORT).show()
             //redirect to receiver
         }
-
         /********************************/
-        bluetoothNameChange()
 
+
+        bluetoothNameChange()
+        //back()
     }
+
+    /*fun back(){
+        var button = findViewById<Button>(R.id.back) as Button
+        button.setOnClickListener {
+            setContentView(R.layout.main_menu_activity)
+        }
+    }*/
 
     fun bluetoothNameChange(){
         val myDevice = BluetoothAdapter.getDefaultAdapter()
