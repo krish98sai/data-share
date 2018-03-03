@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :validatable,
           :confirmable
   validates :phone, presence: true, uniqueness: true
+  validates :phone, presence: true
   include DeviseTokenAuth::Concerns::User
 
 end

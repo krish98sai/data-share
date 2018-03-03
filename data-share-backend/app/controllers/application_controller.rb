@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   protected
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone, :public_key])
   end
 
 end
